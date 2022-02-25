@@ -9,14 +9,21 @@ public class MainManager : MonoBehaviour
     public Brick BrickPrefab;
     public int LineCount = 6;
     public Rigidbody Ball;
+    public Text highScoreText;
+    public GameObject highScoreObject;
+    public InputField enterName;
+    public string highScoreName;
 
     public Text ScoreText;
     public GameObject GameOverText;
     
     private bool m_Started = false;
     private int m_Points;
+    public int highScore;
     
     private bool m_GameOver = false;
+    private bool isCheckScore = false;
+    public static MainManager Instance;
 
     
     // Start is called before the first frame update
@@ -53,12 +60,23 @@ public class MainManager : MonoBehaviour
                 Ball.AddForce(forceDir * 2.0f, ForceMode.VelocityChange);
             }
         }
-        else if (m_GameOver)
+        else if (m_GameOver && !isCheckScore)
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
+            else if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                MenuManager.Instance.Save();
+                SceneManager.LoadScene(0);
+            }
+        }
+        if (isCheckScore && Input.GetKeyDown(KeyCode.Return) && enterName.text != "")
+        {
+            highScoreName = enterName.text;
+            highScoreText.text = "Best Score: " + highScoreName + " : " + highScore;
+            highScoreObject.SetActive(false);
         }
     }
 
@@ -70,7 +88,23 @@ public class MainManager : MonoBehaviour
 
     public void GameOver()
     {
+        HighScoreCheck();
         m_GameOver = true;
         GameOverText.SetActive(true);
     }
+
+    void HighScoreCheck()
+    {
+        if (highScore < m_Points)
+        {
+            highScore = m_Points;
+            highScoreObject.SetActive(true);
+            isCheckScore = true;
+        }
+        
+    }
+
+    
+
+
 }
