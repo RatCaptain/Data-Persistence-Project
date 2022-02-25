@@ -26,7 +26,9 @@ public class MainManager : MonoBehaviour
     public static MainManager Instance;
 
     
-    // Start is called before the first frame update
+    private void Awake() {
+        Instance = this;
+    }
     void Start()
     {
         const float step = 0.6f;
@@ -43,6 +45,10 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
+        
+        highScore = MenuManager.Instance.highScore;
+        highScoreName = MenuManager.Instance.highScoreName;
+        highScoreText.text = "Best Score: " + highScoreName + " : " + highScore;
     }
 
     private void Update()
@@ -75,7 +81,9 @@ public class MainManager : MonoBehaviour
         if (isCheckScore && Input.GetKeyDown(KeyCode.Return) && enterName.text != "")
         {
             highScoreName = enterName.text;
+            MenuManager.Instance.highScoreName = highScoreName;
             highScoreText.text = "Best Score: " + highScoreName + " : " + highScore;
+            isCheckScore = false;
             highScoreObject.SetActive(false);
         }
     }
@@ -100,6 +108,8 @@ public class MainManager : MonoBehaviour
             highScore = m_Points;
             highScoreObject.SetActive(true);
             isCheckScore = true;
+            MenuManager.Instance.highScore = highScore;
+
         }
         
     }

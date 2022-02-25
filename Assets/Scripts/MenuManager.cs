@@ -9,6 +9,7 @@ public class MenuManager : MonoBehaviour
     public int highScore;
     public string highScoreName;
 
+
     private void Awake()
     {
         if (Instance != null)
